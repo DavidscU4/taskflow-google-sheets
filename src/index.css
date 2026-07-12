@@ -1,0 +1,4 @@
+:root { font-family: 'DM Sans', 'Segoe UI', sans-serif; color: #202229; background: #f6f7f9; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(113,87,217,.32); outline-offset: 2px; }
