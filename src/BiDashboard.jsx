@@ -1,9 +1,10 @@
 import { AlertTriangle, BarChart3, CalendarClock, CheckCircle2, Layers3, Timer, TrendingUp } from 'lucide-react'
 import './BiDashboard.css'
+import { parseSheetDate } from './dateUtils'
 
 function normalize(value = '') { return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() }
 function statusType(status) { const value = normalize(status); if (/realizado|finalizado|completado/.test(value)) return 'done'; if (value.includes('proceso')) return 'progress'; return 'pending' }
-function dateOf(value) { const match = value?.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/); return match ? new Date(+match[1], +match[2] - 1, +match[3]) : null }
+function dateOf(value) { return parseSheetDate(value) }
 function daysBetween(start, end) { return Math.max(0, Math.round((end - start) / 86400000)) }
 function groupBy(tasks, key) {
   const result = new Map()

@@ -26,6 +26,7 @@ import "./navigation.css";
 import "./suggestions.css";
 import BiDashboard from "./BiDashboard";
 import ConfigDashboard from "./ConfigDashboard";
+import { formatShortDate, toInputDate } from "./dateUtils";
 
 const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID || "";
 const SHEET_NAME =
@@ -119,7 +120,10 @@ function toTasks(rows, hasHeader = true) {
     .map((row, index) => {
       const task = { id: index + 1, rowNumber: index + 2 };
       fields.forEach((key, i) => {
-        task[key] = (row[i] || "").trim();
+      const value = (row[i] || "").trim();
+      task[key] = ["startDate", "dueDate", "endDate"].includes(key)
+        ? toInputDate(value)
+        : value;
       });
       return task;
     });
@@ -137,12 +141,7 @@ function typeOf(status) {
   return "pending";
 }
 function formatDate(value) {
-  const match = value?.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
-  if (!match) return "Sin fecha";
-  const date = new Date(+match[1], +match[2] - 1, +match[3]);
-  return new Intl.DateTimeFormat("es-EC", { day: "2-digit", month: "short" })
-    .format(date)
-    .replace(".", "");
+  return formatShortDate(value);
 }
 function today() {
   const date = new Date();
@@ -342,7 +341,7 @@ function TaskModal({ task, tasks, saving, error, onClose, onSave }) {
               <input
                 type="date"
                 name="startDate"
-                value={form.startDate.slice(0, 10)}
+                value={toInputDate(form.startDate)}
                 onChange={update}
               />
             </label>
@@ -351,7 +350,7 @@ function TaskModal({ task, tasks, saving, error, onClose, onSave }) {
               <input
                 type="date"
                 name="dueDate"
-                value={form.dueDate.slice(0, 10)}
+                value={toInputDate(form.dueDate)}
                 onChange={update}
               />
             </label>
@@ -360,7 +359,7 @@ function TaskModal({ task, tasks, saving, error, onClose, onSave }) {
               <input
                 type="date"
                 name="endDate"
-                value={form.endDate.slice(0, 10)}
+                value={toInputDate(form.endDate)}
                 onChange={update}
               />
             </label>
